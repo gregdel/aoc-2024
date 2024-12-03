@@ -32,7 +32,7 @@ func newRunResult(day, part int, test bool) *RunResult {
 	}
 }
 
-// Show shows the result of the test
+// Show shows the result of the test.
 func (r *RunResult) Show() {
 	success := r.output == r.expected
 

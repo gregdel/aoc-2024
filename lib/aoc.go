@@ -10,37 +10,31 @@ import (
 	"time"
 )
 
-// Custom errors
-var (
-	ErrMissingDay = errors.New("missing day")
-)
+var challenges = map[int]Challenge{}
 
-// Challenges list
-var Challenges map[int]Challenge = map[int]Challenge{}
-
-// Register registers a challenge
+// Register registers a challenge.
 func Register(c Challenge, day int) {
-	Challenges[day] = c
+	challenges[day] = c
 }
 
-// AllDays returns a list of all the days regitered
+// AllDays returns a list of all the days regitered.
 func AllDays() []int {
 	values := []int{}
-	for d := range Challenges {
+	for d := range challenges {
 		values = append(values, d)
 	}
 	sort.Ints(values)
 	return values
 }
 
-// Challenge represents a challenge
+// Challenge represents a challenge.
 type Challenge interface {
 	Solve(r io.Reader, part int) (string, error)
 	Expect(part int, test bool) string
 }
 
-// Open opens the input for a given day
-func Open(day, part int, test bool) (io.ReadCloser, error) {
+// Open opens the input for a given day.
+func Open(day int, test bool) (io.ReadCloser, error) {
 	dir := fmt.Sprintf("day%02d", day)
 	filename := "input"
 	if test {
@@ -51,14 +45,14 @@ func Open(day, part int, test bool) (io.ReadCloser, error) {
 	return os.Open(path)
 }
 
-// Run run a the challenge
+// Run run a the challenge.
 func Run(day, part int, test bool) (*RunResult, error) {
-	challenge, ok := Challenges[day]
+	challenge, ok := challenges[day]
 	if !ok {
-		return nil, ErrMissingDay
+		return nil, errors.New("missing day")
 	}
 
-	input, err := Open(day, part, test)
+	input, err := Open(day, test)
 	if err != nil {
 		return nil, err
 	}
@@ -74,12 +68,4 @@ func Run(day, part int, test bool) (*RunResult, error) {
 	}
 
 	return result, nil
-}
-
-// MustGet returns v as is. It panics if err is non-nil.
-func MustGet[T any](v T, err error) T {
-	if err != nil {
-		panic(err)
-	}
-	return v
 }

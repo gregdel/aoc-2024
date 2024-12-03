@@ -1,15 +1,14 @@
 package aoc
 
 import (
-	"crypto/sha256"
 	"fmt"
 	"strings"
 )
 
-// Direction represents a direction
+// Direction represents a direction.
 type Direction uint8
 
-// Available directions
+// Available directions.
 const (
 	DirectionUp Direction = iota
 	DirectionDown
@@ -31,7 +30,7 @@ func DirStr(d Direction) string {
 	return dirStrs[int(d)]
 }
 
-// AllDirection represents all the directions
+// AllDirection represents all the directions.
 var AllDirection = []Direction{
 	DirectionDown,
 	DirectionLeft,
@@ -56,7 +55,7 @@ func OppositeDirection(d Direction) Direction {
 	panic("Invalid direction")
 }
 
-// Point represents a 2d point
+// Point represents a 2d point.
 type Point struct {
 	X, Y int
 	C    rune
@@ -71,19 +70,19 @@ func (p *Point) String() string {
 	return fmt.Sprintf("x:%d;y:%d", p.X, p.Y)
 }
 
-// Map2D represents a 2DMap
+// Map2D represents a 2DMap.
 type Map2D struct {
 	Points [][]*Point
 }
 
-// NewMap2D returns a new 2D map
+// NewMap2D returns a new 2D map.
 func NewMap2D() *Map2D {
 	return &Map2D{
 		Points: [][]*Point{},
 	}
 }
 
-// AddPointsFromLine adds points to a 2d map from a string
+// AddPointsFromLine adds points to a 2d map from a string.
 func (m *Map2D) AddPointsFromLine(line string) {
 	y := len(m.Points)
 	points := make([]*Point, len(line))
@@ -93,17 +92,17 @@ func (m *Map2D) AddPointsFromLine(line string) {
 	}
 }
 
-// Width returns the width of the map
+// Width returns the width of the map.
 func (m *Map2D) Width() int {
 	return len(m.Points[0])
 }
 
-// Height returns the height of the map
+// Height returns the height of the map.
 func (m *Map2D) Height() int {
 	return len(m.Points)
 }
 
-// ForAllPoints calls a function for each point in a map
+// ForAllPoints calls a function for each point in a map.
 func (m *Map2D) ForAllPoints(f func(p *Point), directions ...Direction) {
 	d1, d2 := DirectionDown, DirectionRight
 	if len(directions) == 2 {
@@ -151,7 +150,7 @@ func (m *Map2D) ForAllPoints(f func(p *Point), directions ...Direction) {
 	}
 }
 
-// Next returns the next point in the given direction
+// Next returns the next point in the given direction.
 func (m *Map2D) Next(d Direction, p *Point) *Point {
 	switch d {
 	case DirectionUp:
@@ -174,16 +173,7 @@ func (m *Map2D) Next(d Direction, p *Point) *Point {
 	return nil
 }
 
-// SHA256Sum return the checksum of the map
-func (m *Map2D) SHA256Sum() string {
-	h := sha256.New()
-	m.ForAllPoints(func(p *Point) {
-		h.Write([]byte{byte(p.C)})
-	})
-	return fmt.Sprintf("%x", h.Sum(nil))
-}
-
-// String implements the stringer interface
+// String implements the fmt.Stringer interface.
 func (m *Map2D) String() string {
 	var out strings.Builder
 	for y := 0; y < len(m.Points); y++ {
@@ -196,7 +186,7 @@ func (m *Map2D) String() string {
 	return out.String()
 }
 
-// ManhattanDistance returns the ManhattanDistance between two points
+// ManhattanDistance returns the ManhattanDistance between two points.
 func ManhattanDistance(p1, p2 *Point) int {
 	return Abs(p1.X-p2.X) + Abs(p2.Y-p1.Y)
 }

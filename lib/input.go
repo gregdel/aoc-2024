@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// FetchInput fetches the user input from the AOC website.
 func FetchInput(day int) error {
 	outputFile := fmt.Sprintf("day%02d/input", day)
 	_, err := os.Stat(outputFile)
@@ -15,6 +16,9 @@ func FetchInput(day int) error {
 	}
 
 	session := os.Getenv("AOC_SESSION")
+	if session == "" {
+		return fmt.Errorf("Missing AOC_SESSION env variable")
+	}
 
 	url := fmt.Sprintf("https://adventofcode.com/2024/day/%d/input", day)
 

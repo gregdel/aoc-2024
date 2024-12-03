@@ -12,7 +12,7 @@ func GreatestCommonDivisor[T constraints.Integer](a, b T) T {
 	return a
 }
 
-// LeastCommonMultiple returns the least common multiple of integers
+// LeastCommonMultiple returns the least common multiple of integers.
 func LeastCommonMultiple[T constraints.Integer](a, b T, integers ...T) T {
 	result := a * b / GreatestCommonDivisor(a, b)
 
@@ -23,7 +23,7 @@ func LeastCommonMultiple[T constraints.Integer](a, b T, integers ...T) T {
 	return result
 }
 
-// Min returns the min of two numbers
+// Min returns the min of two numbers.
 func Min[T constraints.Integer](a, b T) T {
 	if a < b {
 		return a
@@ -32,7 +32,7 @@ func Min[T constraints.Integer](a, b T) T {
 	return b
 }
 
-// Max returns the max of two numbers
+// Max returns the max of two numbers.
 func Max[T constraints.Integer](a, b T) T {
 	if a > b {
 		return a
@@ -41,7 +41,7 @@ func Max[T constraints.Integer](a, b T) T {
 	return b
 }
 
-// Abs returns the absolute value of v
+// Abs returns the absolute value of v.
 func Abs[T constraints.Integer](v T) T {
 	if v < 0 {
 		return -v
