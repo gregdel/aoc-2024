@@ -1,7 +1,9 @@
 package aoc
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -14,6 +16,10 @@ const (
 	DirectionDown
 	DirectionRight
 	DirectionLeft
+	DirectionUpRight
+	DirectionDownRight
+	DirectionUpLeft
+	DirectionDownLeft
 	DirectionUnkown
 )
 
@@ -22,7 +28,9 @@ func (d Direction) String() string {
 }
 
 var dirStrs = []string{
-	"Up", "Down", "Right", "Left", "Unknown",
+	"Up", "Down", "Right", "Left",
+	"UpRight", "DownRight", "UpLeft", "DownLeft",
+	"Unknown",
 }
 
 // DirStr returns the string representation of a direction.
@@ -38,6 +46,14 @@ var AllDirection = []Direction{
 	DirectionRight,
 }
 
+// AllDirectionWithDiags represents all the directions, diagonals included.
+var AllDirectionWithDiags = append([]Direction{
+	DirectionUpRight,
+	DirectionDownRight,
+	DirectionUpLeft,
+	DirectionDownLeft,
+}, AllDirection...)
+
 // OppositeDirection returns the opposite direction of a direction.
 func OppositeDirection(d Direction) Direction {
 	switch d {
@@ -49,6 +65,14 @@ func OppositeDirection(d Direction) Direction {
 		return DirectionLeft
 	case DirectionLeft:
 		return DirectionRight
+	case DirectionUpRight:
+		return DirectionDownLeft
+	case DirectionDownRight:
+		return DirectionUpLeft
+	case DirectionDownLeft:
+		return DirectionUpRight
+	case DirectionUpLeft:
+		return DirectionDownRight
 	case DirectionUnkown:
 		return DirectionUnkown
 	}
@@ -67,7 +91,7 @@ func NewPoint(x, y int, c rune) *Point {
 }
 
 func (p *Point) String() string {
-	return fmt.Sprintf("x:%d;y:%d", p.X, p.Y)
+	return fmt.Sprintf("x:%d;y:%d [%c]", p.X, p.Y, p.C)
 }
 
 // Map2D represents a 2DMap.
@@ -82,6 +106,16 @@ func NewMap2D() *Map2D {
 	}
 }
 
+// NewMap2DFromReader returns a new 2D map reading line by line in a reader.
+func NewMap2DFromReader(r io.Reader) *Map2D {
+	m := NewMap2D()
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		m.AddPointsFromLine(scanner.Text())
+	}
+	return m
+}
+
 // AddPointsFromLine adds points to a 2d map from a string.
 func (m *Map2D) AddPointsFromLine(line string) {
 	y := len(m.Points)
@@ -90,6 +124,11 @@ func (m *Map2D) AddPointsFromLine(line string) {
 	for x, c := range line {
 		m.Points[y][x] = NewPoint(x, y, c)
 	}
+}
+
+// Get returns a point at specific coordinates.
+func (m *Map2D) Get(x, y int) *Point {
+	return m.Points[y][x]
 }
 
 // Width returns the width of the map.
@@ -168,6 +207,22 @@ func (m *Map2D) Next(d Direction, p *Point) *Point {
 	case DirectionRight:
 		if p.X < len(m.Points[p.Y])-1 {
 			return m.Points[p.Y][p.X+1]
+		}
+	case DirectionUpRight:
+		if p.Y > 0 && p.X < len(m.Points[p.Y-1])-1 {
+			return m.Points[p.Y-1][p.X+1]
+		}
+	case DirectionDownRight:
+		if p.Y < len(m.Points)-1 && p.X < len(m.Points[p.Y+1])-1 {
+			return m.Points[p.Y+1][p.X+1]
+		}
+	case DirectionUpLeft:
+		if p.X > 0 && p.Y > 0 {
+			return m.Points[p.Y-1][p.X-1]
+		}
+	case DirectionDownLeft:
+		if p.X > 0 && p.Y < len(m.Points)-1 {
+			return m.Points[p.Y+1][p.X-1]
 		}
 	}
 	return nil
