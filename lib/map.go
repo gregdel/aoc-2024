@@ -79,6 +79,21 @@ func OppositeDirection(d Direction) Direction {
 	panic("Invalid direction")
 }
 
+// RotateCW rotates a direction clockwise
+func RotateCW(d Direction) Direction {
+	switch d {
+	case DirectionUp:
+		return DirectionRight
+	case DirectionRight:
+		return DirectionDown
+	case DirectionDown:
+		return DirectionLeft
+	case DirectionLeft:
+		return DirectionUp
+	}
+	panic("Invalid direction")
+}
+
 // Point represents a 2d point.
 type Point struct {
 	X, Y int
