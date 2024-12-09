@@ -141,8 +141,16 @@ func (m *Map2D) AddPointsFromLine(line string) {
 	}
 }
 
-// Get returns a point at specific coordinates.
-func (m *Map2D) Get(x, y int) *Point {
+// At returns a point at specific coordinates.
+func (m *Map2D) At(x, y int) *Point {
+	if y < 0 || y >= len(m.Points) {
+		return nil
+	}
+
+	if x < 0 || x >= len(m.Points[0]) {
+		return nil
+	}
+
 	return m.Points[y][x]
 }
 
@@ -259,4 +267,17 @@ func (m *Map2D) String() string {
 // ManhattanDistance returns the ManhattanDistance between two points.
 func ManhattanDistance(p1, p2 *Point) int {
 	return Abs(p1.X-p2.X) + Abs(p2.Y-p1.Y)
+}
+
+// Vec represents a vector.
+type Vec struct {
+	U, V int
+}
+
+// NewVec returns a new vector from two points.
+func NewVec(a, b *Point) Vec {
+	return Vec{
+		U: b.X - a.X,
+		V: b.Y - a.Y,
+	}
 }
