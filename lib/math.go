@@ -49,3 +49,22 @@ func Abs[T constraints.Integer](v T) T {
 
 	return v
 }
+
+// Digits returns the number of digits of an integer.
+func Digits[T constraints.Integer](v T) int {
+	x, count := 10, 1
+	for T(x) <= v {
+		x *= 10
+		count++
+	}
+	return count
+}
+
+// Pow10 returns the result of 10^n.
+func Pow10(n int) int {
+	x := 1
+	for i := 0; i < n; i++ {
+		x *= 10
+	}
+	return x
+}

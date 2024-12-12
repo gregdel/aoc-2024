@@ -39,16 +39,10 @@ func eval(expected int, values []int, part int) bool {
 		return false
 	}
 
-	v0 := values[0]
-	v1 := values[1]
-	v0v1 := v0 * v1
-	v0pv1 := v0 + v1
-
-	toTest := []int{v0v1, v0pv1}
-
+	v0, v1 := values[0], values[1]
+	toTest := []int{v0 * v1, v0 + v1}
 	if part == 2 {
-		v0cv1 := aoc.MustGet(strconv.Atoi(strconv.Itoa(v0) + strconv.Itoa(v1)))
-		toTest = append(toTest, v0cv1)
+		toTest = append(toTest, v0*aoc.Pow10(aoc.Digits(v1))+v1)
 	}
 
 	skip := false
