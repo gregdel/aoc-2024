@@ -165,50 +165,13 @@ func (m *Map2D) Height() int {
 }
 
 // ForAllPoints calls a function for each point in a map.
-func (m *Map2D) ForAllPoints(f func(p *Point), directions ...Direction) {
-	d1, d2 := DirectionDown, DirectionRight
-	if len(directions) == 2 {
-		d1 = directions[0]
-		d2 = directions[1]
-	}
-
-	switch d1 {
-	case DirectionDown:
-		switch d2 {
-		case DirectionRight:
-			for y := 0; y < len(m.Points); y++ {
-				for x := 0; x < len(m.Points[y]); x++ {
-					f(m.Points[y][x])
-				}
+func (m *Map2D) ForAllPoints(f func(p *Point) bool) {
+	for y := 0; y < len(m.Points); y++ {
+		for x := 0; x < len(m.Points[y]); x++ {
+			if !f(m.Points[y][x]) {
+				return
 			}
-		case DirectionLeft:
-			for y := 0; y < len(m.Points); y++ {
-				for x := len(m.Points[y]) - 1; x >= 0; x-- {
-					f(m.Points[y][x])
-				}
-			}
-		default:
-			panic("Invalid direction d2")
 		}
-	case DirectionUp:
-		switch d2 {
-		case DirectionRight:
-			for y := len(m.Points) - 1; y >= 0; y-- {
-				for x := 0; x < len(m.Points[y]); x++ {
-					f(m.Points[y][x])
-				}
-			}
-		case DirectionLeft:
-			for y := len(m.Points) - 1; y >= 0; y-- {
-				for x := len(m.Points[y]) - 1; x >= 0; x-- {
-					f(m.Points[y][x])
-				}
-			}
-		default:
-			panic("Invalid direction d2")
-		}
-	default:
-		panic("Invalid direction d1")
 	}
 }
 

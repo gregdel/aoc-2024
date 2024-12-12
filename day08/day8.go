@@ -20,11 +20,12 @@ func (d *day) Expect(part int, test bool) string {
 func (d *day) Solve(r io.Reader, part int) (string, error) {
 	m := aoc.NewMap2DFromReader(r)
 	points := map[rune][]*aoc.Point{}
-	m.ForAllPoints(func(p *aoc.Point) {
+	m.ForAllPoints(func(p *aoc.Point) bool {
 		if p.C == '.' {
-			return
+			return true
 		}
 		points[p.C] = append(points[p.C], p)
+		return true
 	})
 
 	antinodes := aoc.NewSet[*aoc.Point]()

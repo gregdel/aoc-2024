@@ -20,12 +20,13 @@ func (d *day) Expect(part int, test bool) string {
 func (d *day) Solve(r io.Reader, part int) (string, error) {
 	m := aoc.NewMap2DFromReader(r)
 	total := 0
-	m.ForAllPoints(func(p *aoc.Point) {
+	m.ForAllPoints(func(p *aoc.Point) bool {
 		if p.C == '0' {
 			ends := aoc.NewSet[*aoc.Point]()
 			v := explore(m, p, ends, part)
 			total += v
 		}
+		return true
 	})
 
 	return strconv.Itoa(total), nil

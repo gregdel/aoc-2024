@@ -40,10 +40,12 @@ func (d *day) Solve(r io.Reader, part int) (string, error) {
 
 func start(m *aoc.Map2D) *aoc.Point {
 	var ret *aoc.Point
-	m.ForAllPoints(func(p *aoc.Point) {
+	m.ForAllPoints(func(p *aoc.Point) bool {
 		if p.C == '^' {
 			ret = p
+			return false
 		}
+		return true
 	})
 	return ret
 }

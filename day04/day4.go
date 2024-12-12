@@ -32,20 +32,22 @@ func (d *day) Solve(r io.Reader, part int) (string, error) {
 
 func solve1(m *aoc.Map2D) int {
 	total := 0
-	m.ForAllPoints(func(p *aoc.Point) {
+	m.ForAllPoints(func(p *aoc.Point) bool {
 		if p.C == 'X' {
 			total += findXMAS(m, p)
 		}
+		return true
 	})
 	return total
 }
 
 func solve2(m *aoc.Map2D) int {
 	total := 0
-	m.ForAllPoints(func(p *aoc.Point) {
+	m.ForAllPoints(func(p *aoc.Point) bool {
 		if p.C == 'A' && hasCross(m, p) {
 			total++
 		}
+		return true
 	})
 	return total
 }
