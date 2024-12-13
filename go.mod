@@ -6,6 +6,7 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
+	gonum.org/v1/gonum v0.15.1
 )
 
 require (
