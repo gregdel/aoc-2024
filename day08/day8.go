@@ -34,7 +34,7 @@ func (d *day) Solve(r io.Reader, part int) (string, error) {
 			for j := i + 1; j < len(antennas); j++ {
 				ai := antennas[i]
 				aj := antennas[j]
-				v := aoc.NewVec(ai, aj)
+				v := aoc.NewVecFromPoints(*ai, *aj)
 				if part == 2 {
 					antinodes.Add(ai)
 					antinodes.Add(aj)
