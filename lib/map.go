@@ -313,3 +313,13 @@ func IsWithinMap(x, y, minX, minY, maxX, maxY int) bool {
 
 	return false
 }
+
+// Move represents a move for a point in a direction.
+type Move struct {
+	P *Point
+	D Direction
+}
+
+func NewMove(p *Point, d Direction) Move {
+	return Move{P: p, D: d}
+}
