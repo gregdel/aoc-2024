@@ -1,6 +1,8 @@
 package aoc
 
 import (
+	"bufio"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -21,4 +23,17 @@ func IntsFromString(input string) []int {
 		output[i] = MustGet(strconv.Atoi(fields[i]))
 	}
 	return output
+}
+
+func BinStr(i int) string {
+	return strconv.FormatInt(int64(i), 2)
+}
+
+func BinUStr(i uint64) string {
+	return strconv.FormatUint(i, 2)
+}
+
+func WaitInput() {
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
 }
