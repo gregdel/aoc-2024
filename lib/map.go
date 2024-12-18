@@ -265,6 +265,32 @@ func (m *Map2D) Next(d Direction, p *Point) *Point {
 	return nil
 }
 
+func (m *Map2D) FindPathDistance(start, end *Point, path rune) int {
+	dist := map[*Point]int{}
+	pq := NewPriorityQueue[*Point]()
+	pq.Push(start, 0)
+	for pq.Len() > 0 {
+		p, prio := pq.Pop()
+		for _, d := range AllDirection {
+			np := m.Next(d, p)
+			if np == nil || np.C != path {
+				continue
+			}
+
+			if _, ok := dist[np]; ok {
+				continue
+			}
+
+			if np == end {
+				return prio + 1
+			}
+			dist[np] = prio + 1
+			pq.Push(np, prio+1)
+		}
+	}
+	return 0
+}
+
 // String implements the fmt.Stringer interface.
 func (m *Map2D) String() string {
 	var out strings.Builder
