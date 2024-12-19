@@ -80,6 +80,7 @@ func match(patterns []string, input string, depth, part int) (int, bool) {
 				c, ok = match(patterns, nextInput, depth+1, part)
 				cache[nextInput] = cacheValue{value: c, ok: ok}
 			}
+			total += c
 
 			if part == 1 {
 				if ok {
@@ -87,13 +88,7 @@ func match(patterns []string, input string, depth, part int) (int, bool) {
 				}
 				continue
 			}
-
-			total += c
 		}
-	}
-
-	if part == 0 {
-		return 0, false
 	}
 
 	return total, total > 0
