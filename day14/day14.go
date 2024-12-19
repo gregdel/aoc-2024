@@ -2,7 +2,6 @@ package day13
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -100,8 +99,6 @@ func solve1(input []data, seconds, maxX, maxY int) (int, error) {
 		p[i] = k
 		i++
 	}
-	m := mapFromData(p, maxX, maxY)
-	fmt.Println(m)
 
 	return total, nil
 }
