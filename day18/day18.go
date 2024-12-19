@@ -38,24 +38,33 @@ func (d *day) Solve(r io.Reader, part int) (string, error) {
 	m := aoc.NewEmptyMap2D(mx, my, '.')
 	start, end := m.At(0, 0), m.At(mx-1, my-1)
 
-	result := ""
+	bestPath := aoc.NewSet[*aoc.Point]()
 	for i, p := range points {
 		if part == 1 && i == bytes {
-			result = strconv.Itoa(m.FindPathDistance(start, end, '.'))
-			break
+			return strconv.Itoa(len(m.FindPath(start, end, '.'))), nil
 		}
-		m.At(p.X, p.Y).C = p.C
+
+		mp := m.At(p.X, p.Y)
+		mp.C = p.C
 
 		if i < bytes {
 			continue
 		}
 
-		d := m.FindPathDistance(start, end, '.')
-		if d == 0 {
-			result = strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y)
-			break
+		if bestPath.Len() > 0 && !bestPath.Has(mp) {
+			continue
+		}
+
+		path := m.FindPath(start, end, '.')
+		if len(path) == 0 {
+			return strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y), nil
+		}
+
+		bestPath = aoc.NewSet[*aoc.Point]()
+		for _, pp := range path {
+			bestPath.Add(pp)
 		}
 	}
 
-	return result, nil
+	return "", nil
 }

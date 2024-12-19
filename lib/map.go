@@ -265,11 +265,13 @@ func (m *Map2D) Next(d Direction, p *Point) *Point {
 	return nil
 }
 
-func (m *Map2D) FindPathDistance(start, end *Point, path rune) int {
+func (m *Map2D) FindPath(start, end *Point, path rune) []*Point {
+	prev := map[*Point]*Point{}
 	dist := map[*Point]int{}
 	pq := NewPriorityQueue[*Point]()
 	pq.Push(start, 0)
-	for pq.Len() > 0 {
+	pathLen := 0
+	for pq.Len() > 0 && pathLen == 0 {
 		p, prio := pq.Pop()
 		for _, d := range AllDirection {
 			np := m.Next(d, p)
@@ -281,14 +283,24 @@ func (m *Map2D) FindPathDistance(start, end *Point, path rune) int {
 				continue
 			}
 
-			if np == end {
-				return prio + 1
-			}
 			dist[np] = prio + 1
+			prev[np] = p
+			if np == end {
+				pathLen = prio + 1
+				break
+			}
 			pq.Push(np, prio+1)
 		}
 	}
-	return 0
+
+	out := make([]*Point, pathLen)
+	p := end
+	for i := pathLen - 1; i >= 0; i-- {
+		out[i] = p
+		p = prev[p]
+	}
+
+	return out
 }
 
 // String implements the fmt.Stringer interface.
