@@ -1,7 +1,6 @@
 package day20
 
 import (
-	"fmt"
 	"io"
 	"strconv"
 
@@ -16,15 +15,12 @@ type day struct{}
 
 func (d *day) Expect(part int, test bool) string {
 	return aoc.NewResult(
-		"0", "1365", "x", "x",
+		"0", "1365", "0", "986082",
 	).Expect(part, test)
 }
 
-// 1339 too low
 func (d *day) Solve(r io.Reader, part int) (string, error) {
 	m := aoc.NewMap2DFromReader(r)
-	// fmt.Println(m)
-
 	var start, end *aoc.Point
 	m.ForAllPoints(func(p *aoc.Point) bool {
 		switch p.C {
@@ -40,91 +36,35 @@ func (d *day) Solve(r io.Reader, part int) (string, error) {
 		return true
 	})
 
-	startEndPath, distStart := m.FindPathDistances(start, end, '.')
-	_, distEnd := m.FindPathDistances(end, start, '.')
+	points := append([]*aoc.Point{start}, m.FindPath(start, end, '.')...)
 
-	baseScore := len(startEndPath)
-	fmt.Println("Base score", baseScore)
+	result, maxCheat, toSave := 0, 2, 100
+	if part == 2 {
+		maxCheat = 20
+	}
 
-	points := []*aoc.Point{}
-	m.ForAllPoints(func(p *aoc.Point) bool {
-		if p.C != '#' {
-			return true
-		}
-
-		for _, d := range aoc.AllDirection {
-			np := m.Next(d, p)
-			if np == nil || np.C != '#' {
-				points = append(points, p)
-				break
-			}
-		}
-
-		return true
-	})
-	fmt.Println(len(points))
-
-	maxCheat := 1
-
-	yo := map[int]int{}
-	result := 0
-	for _, p := range points {
-		ds, sok := distStart[p]
-		if !sok {
-			continue
-		}
-
-		// p.C = '.'
-		// realScore := len(m.FindPath(start, end, '.'))
-		// p.C = '#'
-
-		// if score != realScore {
-		// 	fmt.Println(p, ds, de, score, realScore)
-		// 	break
-		// }
-
-		explored := aoc.NewSet[*aoc.Point]()
-		pq := aoc.NewPriorityQueue[*aoc.Point]()
-		pq.Push(p, 1)
-		for pq.Len() > 0 {
-			cp, prio := pq.Pop()
-			if prio > maxCheat {
-				continue
-			}
-			if explored.Has(cp) {
+	for i := 0; i < len(points)-toSave; i++ {
+		for j := aoc.Min(len(points), i+toSave); j < len(points); j++ {
+			distance := aoc.ManhattanDistance(points[i], points[j])
+			if part == 1 && distance != 2 {
 				continue
 			}
 
-			de, dok := distEnd[p]
-			if dok {
-				score := ds + de
-				saved := baseScore - score
-				if score > baseScore {
-					continue
-				}
-
-				yo[saved]++
-				// fmt.Println(score, "saved:", saved)
-				if saved >= 100 {
-					result++
-				}
+			if part == 2 && distance > maxCheat {
+				continue
 			}
 
-			for _, d := range aoc.AllDirection {
-				np := m.Next(d, p)
-				if np == nil || np.C != '#' {
-					continue
-				}
-				pq.Push(np, prio+1)
+			distStart, distEnd := i, len(points)-1-j
+			saved := (len(points) - 1) - (distStart + distEnd + distance)
+			if saved <= 0 {
+				continue
+			}
+
+			if saved >= toSave {
+				result++
 			}
 		}
 	}
-
-	for s, c := range yo {
-		fmt.Println(c, "saved", s)
-	}
-
-	fmt.Println(yo)
 
 	return strconv.Itoa(result), nil
 }

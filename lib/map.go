@@ -275,7 +275,11 @@ func (m *Map2D) FindPath(start, end *Point, path rune) []*Point {
 		p, prio := pq.Pop()
 		for _, d := range AllDirection {
 			np := m.Next(d, p)
-			if np == nil || np.C != path {
+			if np == nil {
+				continue
+			}
+
+			if np.C != path && np != end {
 				continue
 			}
 
@@ -291,6 +295,10 @@ func (m *Map2D) FindPath(start, end *Point, path rune) []*Point {
 			}
 			pq.Push(np, prio+1)
 		}
+	}
+
+	if pathLen == 0 {
+		return nil
 	}
 
 	out := make([]*Point, pathLen)
@@ -314,6 +322,14 @@ func (m *Map2D) String() string {
 		out.WriteRune('\n')
 	}
 	return out.String()
+}
+
+func (m *Map2D) Debug(p *Point) {
+	c := p.C
+	p.C = '×'
+	fmt.Println(m)
+	p.C = c
+	WaitInput()
 }
 
 // ManhattanDistance returns the ManhattanDistance between two points.
